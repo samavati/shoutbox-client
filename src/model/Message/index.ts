@@ -1,8 +1,8 @@
-import { IAttendee } from "../Attendee";
+import { IUser } from "../User";
 
 export interface IMessage {
     id: string;
-    attendee: IAttendee;
+    attendee: IUser;
     message: string;
     isMe:boolean
 }
