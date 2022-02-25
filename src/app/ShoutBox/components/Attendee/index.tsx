@@ -3,9 +3,9 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import { ListChildComponentProps } from 'react-window';
-import { IAttendee } from '../../../../model/Attendee';
+import { IUser } from '../../../../model/User';
 
-interface AttendeeProps extends ListChildComponentProps<IAttendee[]> {
+interface AttendeeProps extends ListChildComponentProps<IUser[]> {
 
 }
 

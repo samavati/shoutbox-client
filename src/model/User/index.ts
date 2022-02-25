@@ -1,4 +1,4 @@
-export interface IAttendee {
+export interface IUser {
     name: string;
     id: string
 }
