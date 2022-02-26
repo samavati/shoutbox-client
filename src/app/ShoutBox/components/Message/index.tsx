@@ -10,7 +10,7 @@ interface MessageProps {
 
 const Message: React.FC<MessageProps> = ({ message }) => {
 
-    const attendeeName = message.isMe ? 'You' : message.attendee.name;
+    const attendeeName = message.isMe ? 'You' : message.user.name;
     const theme = useTheme();
 
     return (
