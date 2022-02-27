@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
 import MeetingRoomRoundedIcon from '@mui/icons-material/MeetingRoomRounded';
 import Typography from '@mui/material/Typography';
@@ -9,8 +9,7 @@ import { useUser } from '../../context/user.context';
 import { Form, Formik } from 'formik';
 import FormikTextField from './components/FormikTextField';
 import { useSocket } from '../../context/socket.context';
-import { AdminMessage } from '../ShoutBox';
-import { AdminMessageEvent, MessageEvent } from '../../enums/MessageEvenet.enum';
+import { joinUser } from '../../services/users.service';
 
 interface LoginProps {
 
@@ -21,15 +20,6 @@ const Login: React.FC<LoginProps> = () => {
     const { setUser } = useUser();
     const socket = useSocket();
 
-    useEffect(() => {
-
-        socket?.on(MessageEvent.ADMIN_MESSAGE, ({ type, message, data }: AdminMessage) => {
-            if (type === AdminMessageEvent.JOINED_SUCCESSFULLY) {
-                setUser(data);
-            }
-        })
-
-    }, [socket])
 
     return (
         <Container component="main" maxWidth="xs">
@@ -49,30 +39,39 @@ const Login: React.FC<LoginProps> = () => {
                 </Typography>
                 <Formik
                     initialValues={{ userName: '' }}
-                    onSubmit={(values) => {
-                        socket?.emit('JOIN', { name: values.userName });
+                    onSubmit={async (values, { setFieldError, setSubmitting }) => {
+                        try {
+                            const { data } = await joinUser(values.userName, socket.id);
+                            setUser({ id: data.id, name: data.name });
+                        } catch (error: any) {
+                            setFieldError('userName', error.response.data.message);
+                            setSubmitting(false)
+                        }
                     }}
                 >
-                    <Form noValidate>
-                        <Box sx={{ mt: 1 }}>
-                            <FormikTextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                label="Your name"
-                                name="userName"
-                                autoFocus
-                            />
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
-                            >
-                                Enter
-                            </Button>
-                        </Box>
-                    </Form>
+                    {({ isSubmitting }) => (
+                        <Form noValidate>
+                            <Box sx={{ mt: 1 }}>
+                                <FormikTextField
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    label="Your name"
+                                    name="userName"
+                                    autoFocus
+                                />
+                                <LoadingButton
+                                    type="submit"
+                                    fullWidth
+                                    loading={isSubmitting}
+                                    variant="contained"
+                                    sx={{ mt: 3, mb: 2 }}
+                                >
+                                    Enter
+                                </LoadingButton>
+                            </Box>
+                        </Form>
+                    )}
                 </Formik>
             </Box>
         </Container>

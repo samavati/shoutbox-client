@@ -7,7 +7,7 @@ interface IRoomContext {
     setRoomUsers: React.Dispatch<React.SetStateAction<{ [key: string]: IUser }>>,
 }
 
-export const RoomContext = createContext<IRoomContext | null>(null);
+export const RoomContext = createContext<IRoomContext>({} as IRoomContext);
 
 export const useRoomContext = () => {
     return useContext(RoomContext) as IRoomContext;

@@ -7,7 +7,7 @@ interface IUserContext {
     setUser: React.Dispatch<React.SetStateAction<IUser | null>>
 }
 
-export const UserContext = createContext<IUserContext | null>(null);
+export const UserContext = createContext<IUserContext>({} as IUserContext);
 
 export const useUser = () => {
     return useContext(UserContext) as IUserContext;
