@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import { FixedSizeList } from 'react-window';
@@ -12,10 +12,11 @@ import Message from './components/Message';
 import Actions from './components/Actions';
 import { useSocket } from '../../context/socket.context';
 import { useUser } from '../../context/user.context';
-import { useRoomUsers } from '../../context/room.context';
+import { useRoomContext } from '../../context/room.context';
 import { AdminMessageEvent, MessageEvent } from '../../enums/MessageEvenet.enum';
 import { getAllUsers } from '../../services/users.service';
 import MessagesWrapper from './components/MessagesWrapper';
+import { getConfig } from '../../services/config.service';
 
 export interface AdminMessage {
     type: string, message: string, data: any
@@ -29,10 +30,11 @@ const ShoutBox: React.FC<ShoutBoxProps> = () => {
 
     const socket = useSocket();
     const { user } = useUser();
-    const { roomUsers, setRoomUsers } = useRoomUsers();
+    const { roomUsers, setRoomUsers } = useRoomContext();
     const [messages, setMessages] = useState<IMessage[]>([]);
 
-    const arrayRemoteUsers = useMemo(() => Object.values(roomUsers), [roomUsers])
+    const arrayRemoteUsers = useMemo(() => Object.values(roomUsers), [roomUsers]);
+    let showLimitMessage = useRef(100);
 
     const handleSendMessage = (message: string) => {
         socket?.emit(MessageEvent.USER_MESSAGE, { message });
@@ -41,13 +43,23 @@ const ShoutBox: React.FC<ShoutBoxProps> = () => {
     useEffect(() => {
         getAllUsers()
             .then(res => res.data.reduce((a, v) => ({ ...a, [v.id]: v }), {}))
-            .then(data => setRoomUsers(data))
+            .then(data => setRoomUsers(data));
+
+        getConfig().then(res => showLimitMessage.current = res.data.show_limit);
     }, [])
 
     useEffect(() => {
 
         socket?.on(MessageEvent.USER_MESSAGE, (message: Omit<IMessage, 'isMe'>) => {
-            setMessages(prev => [...prev, { ...message, isMe: message.user.id === user?.id }]);
+            setMessages(prev => {
+                const newMessages = [...prev];
+                const { length } = newMessages;
+                let diff = (length + 1) - showLimitMessage.current;
+                if (diff > 0) {
+                    newMessages.splice(0, diff);
+                }
+                return [...newMessages, { ...message, isMe: message.user.id === user?.id }]
+            });
         });
 
         socket?.on(MessageEvent.ADMIN_MESSAGE, ({ type, message, data }: AdminMessage) => {

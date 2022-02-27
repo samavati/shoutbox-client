@@ -4,11 +4,11 @@ import { IUser } from "../model/User";
 
 interface IRoomContext {
     roomUsers: { [key: string]: IUser };
-    setRoomUsers: React.Dispatch<React.SetStateAction<{ [key: string]: IUser }>>
+    setRoomUsers: React.Dispatch<React.SetStateAction<{ [key: string]: IUser }>>,
 }
 
 export const RoomContext = createContext<IRoomContext | null>(null);
 
-export const useRoomUsers = () => {
+export const useRoomContext = () => {
     return useContext(RoomContext) as IRoomContext;
 }
