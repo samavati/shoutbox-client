@@ -9,9 +9,8 @@ import { useUser } from '../../context/user.context';
 import { Form, Formik } from 'formik';
 import FormikTextField from './components/FormikTextField';
 import { useSocket } from '../../context/socket.context';
-import { useRoomUsers } from '../../context/room.context';
-import { getAllUsers } from '../../services/users.service';
 import { AdminMessage } from '../ShoutBox';
+import { AdminMessageEvent, MessageEvent } from '../../enums/MessageEvenet.enum';
 
 interface LoginProps {
 
@@ -20,15 +19,13 @@ interface LoginProps {
 const Login: React.FC<LoginProps> = () => {
 
     const { setUser } = useUser();
-    const { setRoomUsers } = useRoomUsers();
     const socket = useSocket();
 
     useEffect(() => {
 
-        socket?.on('ADMIN_MESSAGE', ({ type, message, data }: AdminMessage) => {
-            if (type === 'JOINED_SUCCESSFULLY') {
+        socket?.on(MessageEvent.ADMIN_MESSAGE, ({ type, message, data }: AdminMessage) => {
+            if (type === AdminMessageEvent.JOINED_SUCCESSFULLY) {
                 setUser(data);
-                getAllUsers().then(res => setRoomUsers(res.data))
             }
         })
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import { FixedSizeList } from 'react-window';
@@ -14,6 +14,8 @@ import Actions from './components/Actions';
 import { useSocket } from '../../context/socket.context';
 import { useUser } from '../../context/user.context';
 import { useRoomUsers } from '../../context/room.context';
+import { AdminMessageEvent, MessageEvent } from '../../enums/MessageEvenet.enum';
+import { getAllUsers } from '../../services/users.service';
 
 export interface AdminMessage {
     type: string, message: string, data: any
@@ -26,23 +28,42 @@ interface ShoutBoxProps {
 const ShoutBox: React.FC<ShoutBoxProps> = () => {
 
     const socket = useSocket();
-    const { user, setUser } = useUser();
+    const { user } = useUser();
     const { roomUsers, setRoomUsers } = useRoomUsers();
     const [messages, setMessages] = useState<IMessage[]>([]);
 
+    const arrayRemoteUsers = useMemo(() => Object.values(roomUsers), [roomUsers])
+
     const handleSendMessage = (message: string) => {
-        socket?.emit('message', { message });
+        socket?.emit(MessageEvent.USER_MESSAGE, { message });
     }
 
     useEffect(() => {
+        getAllUsers()
+            .then(res => res.data.reduce((a, v) => ({ ...a, [v.id]: v }), {}))
+            .then(data => setRoomUsers(data))
+    }, [])
 
-        socket?.on('message', (message: Omit<IMessage, 'isMe'>) => {
+    useEffect(() => {
+
+        socket?.on(MessageEvent.USER_MESSAGE, (message: Omit<IMessage, 'isMe'>) => {
             setMessages(prev => [...prev, { ...message, isMe: message.user.id === user?.id }]);
         });
 
-        socket?.on('ADMIN_MESSAGE', ({ type, message, data }: AdminMessage) => {
-            if (type === 'NEW_MEMBER_JOINED') {
-                setRoomUsers(prev => [...prev, data])
+        socket?.on(MessageEvent.ADMIN_MESSAGE, ({ type, message, data }: AdminMessage) => {
+            switch (type) {
+                case AdminMessageEvent.NEW_MEMBER_JOINED:
+                    setRoomUsers(prev => ({ ...prev, [data.id]: data }))
+                    break;
+                case AdminMessageEvent.LEAVED_SUCCESSFULLY:
+                    setRoomUsers(prev => {
+                        const newRemoteUsers = { ...prev };
+                        delete newRemoteUsers[data.id]
+                        return newRemoteUsers
+                    })
+                    break;
+                default:
+                    break;
             }
         })
 
@@ -62,8 +83,8 @@ const ShoutBox: React.FC<ShoutBoxProps> = () => {
                                 <FixedSizeList
                                     className="List"
                                     height={height}
-                                    itemData={roomUsers}
-                                    itemCount={roomUsers.length}
+                                    itemData={arrayRemoteUsers}
+                                    itemCount={arrayRemoteUsers.length}
                                     itemSize={46}
                                     width={width}
                                 >

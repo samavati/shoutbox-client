@@ -11,7 +11,7 @@ import { RoomContext } from './context/room.context';
 
 function App() {
   const [user, setUser] = useState<IUser | null>(null);
-  const [roomUsers, setRoomUsers] = useState<IUser[]>([]);
+  const [roomUsers, setRoomUsers] = useState<{ [key: string]: IUser }>({});
 
   return (
     <ThemeProvider theme={theme}>
