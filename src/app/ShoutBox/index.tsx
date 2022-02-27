@@ -16,6 +16,7 @@ import { AdminMessageEvent, MessageEvent } from '../../enums/MessageEvent.enum';
 import { getAllUsers } from '../../services/users.service';
 import MessagesWrapper from './components/MessagesWrapper';
 import { getConfig } from '../../services/config.service';
+import Hidden from '@mui/material/Hidden';
 
 export interface AdminMessage {
     type: string, message: string, data: any
@@ -110,23 +111,25 @@ const ShoutBox: React.FC<ShoutBoxProps> = () => {
         <Container component="main" maxWidth="md">
             <Box className='shout-box-wrapper'>
                 <ShoutBoxPaper>
-                    <AttendeesWrapper>
-                        <AutoSizer>
-                            {({ height, width }) => (
-                                <FixedSizeList
-                                    className="List"
-                                    height={height}
-                                    itemData={arrayRemoteUsers}
-                                    itemCount={arrayRemoteUsers.length}
-                                    itemSize={46}
-                                    width={width}
-                                >
-                                    {Attendee}
-                                </FixedSizeList>
-                            )}
-                        </AutoSizer>
-                    </AttendeesWrapper>
-                    <Box display="flex" flexDirection="column" flex={1} pl="5px">
+                    <Hidden mdDown>
+                        <AttendeesWrapper>
+                            <AutoSizer>
+                                {({ height, width }) => (
+                                    <FixedSizeList
+                                        className="List"
+                                        height={height}
+                                        itemData={arrayRemoteUsers}
+                                        itemCount={arrayRemoteUsers.length}
+                                        itemSize={46}
+                                        width={width}
+                                    >
+                                        {Attendee}
+                                    </FixedSizeList>
+                                )}
+                            </AutoSizer>
+                        </AttendeesWrapper>
+                    </Hidden>
+                    <Box display="flex" flexDirection="column" flex={1}>
                         <MessagesWrapper>
                             {messages.map((message) => (<Message key={message.id} message={message} />))}
                         </MessagesWrapper>

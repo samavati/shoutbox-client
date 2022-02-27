@@ -8,9 +8,6 @@ export const StyledMessagesWrapper = styled(Box)(({ theme }) => ({
     margin: theme.spacing(0, 0, 2),
     padding: theme.spacing(0, 1),
     overflowY: 'auto',
-    '& div:not(:last-child)': {
-        marginBottom: theme.spacing(2)
-    },
     '& > div': {
         height: '100%'
     }
