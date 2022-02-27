@@ -7,7 +7,6 @@ import { ShoutBoxPaper } from './components/ShoutBoxPaper';
 import { AttendeesWrapper } from './components/AttendeesWrapper';
 import Attendee from './components/Attendee';
 import { faker } from '@faker-js/faker';
-import { MessagesWrapper } from './components/MessagesWrapper';
 import { IMessage } from '../../model/Message';
 import Message from './components/Message';
 import Actions from './components/Actions';
@@ -16,6 +15,7 @@ import { useUser } from '../../context/user.context';
 import { useRoomUsers } from '../../context/room.context';
 import { AdminMessageEvent, MessageEvent } from '../../enums/MessageEvenet.enum';
 import { getAllUsers } from '../../services/users.service';
+import MessagesWrapper from './components/MessagesWrapper';
 
 export interface AdminMessage {
     type: string, message: string, data: any
