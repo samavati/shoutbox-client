@@ -17,6 +17,7 @@ import { getAllUsers } from '../../services/users.service';
 import MessagesWrapper from './components/MessagesWrapper';
 import { getConfig } from '../../services/config.service';
 import Hidden from '@mui/material/Hidden';
+import { replaceHyperlinks } from '../../utils/replaceHyperlinks';
 
 export interface AdminMessage {
     type: string, message: string, data: any
@@ -82,7 +83,7 @@ const ShoutBox: React.FC<ShoutBoxProps> = () => {
             if (diff > 0) {
                 newMessages.splice(0, diff);
             }
-            return [...newMessages, { ...message, isMe: message.user.id === user?.id }]
+            return [...newMessages, { ...message, message: replaceHyperlinks(message.message), isMe: message.user.id === user?.id }]
         });
     }, [user?.id])
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import Paper from '@mui/material/Paper';
 import uniqolor from 'uniqolor';
+import sanitizeHtml from 'sanitize-html';
 import { IMessage } from '../../../../model/Message';
 import { Typography, useTheme } from '@mui/material';
 import { format } from 'date-fns';
@@ -30,7 +31,10 @@ const Message: React.FC<MessageProps> = ({ message }) => {
                     >
                         {attendeeName}
                     </Typography>
-                    <Typography style={{ wordBreak: 'break-all' }}>{message.message}</Typography>
+                    <Typography
+                        style={{ wordBreak: 'break-all' }}
+                        dangerouslySetInnerHTML={{ __html: sanitizeHtml(message.message) }}
+                    />
                 </Paper>
                 <Typography variant="caption">{format(new Date(message.date), 'd MMM H:mm')}</Typography>
             </div>
