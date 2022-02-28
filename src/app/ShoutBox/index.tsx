@@ -6,7 +6,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { ShoutBoxPaper } from './components/ShoutBoxPaper';
 import { AttendeesWrapper } from './components/AttendeesWrapper';
 import Attendee from './components/Attendee';
-import { IMessage } from '../../model/Message';
+import { IMessage, IUserMessage } from '../../model/Message';
 import Message from './components/Message';
 import Actions from './components/Actions';
 import { useSocket } from '../../context/socket.context';
@@ -18,9 +18,15 @@ import MessagesWrapper from './components/MessagesWrapper';
 import { getConfig } from '../../services/config.service';
 import Hidden from '@mui/material/Hidden';
 import { replaceHyperlinks } from '../../utils/replaceHyperlinks';
+import { xor } from 'lodash';
 
 export interface AdminMessage {
-    type: string, message: string, data: any
+    type: string,
+    payload: {
+        id: string,
+        message: string,
+        data: any
+    }
 }
 
 interface ShoutBoxProps {
@@ -51,39 +57,52 @@ const ShoutBox: React.FC<ShoutBoxProps> = () => {
     /**
      * A callback function, listens to the Admin Messages
      */
-    const handleAdminMessageEvents = useCallback(({ type, message, data }: AdminMessage) => {
-        if (type === 'JOINED_SUCCESSFULLY') {
-            console.log(message)
+    const handleAdminMessageEvents = useCallback(({ type, payload }: AdminMessage) => {
+
+        if (type === AdminMessageEvent.JOINED_SUCCESSFULLY) {
+
         }
-        switch (type) {
-            case AdminMessageEvent.NEW_MEMBER_JOINED:
-                setRoomUsers(prev => ({ ...prev, [data.id]: data }))
-                break;
-            case AdminMessageEvent.LEAVED_SUCCESSFULLY:
-                setRoomUsers(prev => {
-                    const newRemoteUsers = { ...prev };
-                    delete newRemoteUsers[data.id]
-                    return newRemoteUsers
-                })
-                break;
-            default:
-                break;
+
+        if (type === AdminMessageEvent.NEW_MEMBER_JOINED) {
+            setRoomUsers(prev => ({ ...prev, [payload.data.id]: payload.data }))
         }
+
+        if (type === AdminMessageEvent.LEAVED_SUCCESSFULLY) {
+            setRoomUsers(prev => {
+                const newRemoteUsers = { ...prev };
+                delete newRemoteUsers[payload.data.id]
+                return newRemoteUsers
+            })
+        }
+
+        setMessages(prev => [...prev, { type: 'admin', payload: { id: payload.id, message: payload.message } }]);
+
     }, [setRoomUsers]);
 
     /**
      * A callback function, listens to the Users Messages
      */
-    const handleUserMessageEvents = useCallback((message: Omit<IMessage, 'isMe'>) => {
+    const handleUserMessageEvents = useCallback((message: IUserMessage) => {
         setMessages(prev => {
             // Ensure that the number of showing messages is in accordance with the configuration
-            const newMessages = [...prev];
-            const { length } = newMessages;
+            const usersMessages = prev.filter(message => message.type !== 'admin');
+            const { length } = usersMessages;
             let diff = (length + 1) - showLimitMessage.current;
+            let shouldRemoveMessages: IMessage[] = [];
+
             if (diff > 0) {
-                newMessages.splice(0, diff);
+                shouldRemoveMessages = usersMessages.splice(0, diff);
             }
-            return [...newMessages, { ...message, message: replaceHyperlinks(message.message), isMe: message.user.id === user?.id }]
+
+            return [
+                ...xor(prev, shouldRemoveMessages),
+                {
+                    type: message.user.id === user?.id ? 'me' : 'user',
+                    payload: {
+                        ...message, message: replaceHyperlinks(message.message)
+                    }
+                }
+            ]
         });
     }, [user?.id])
 
@@ -132,7 +151,7 @@ const ShoutBox: React.FC<ShoutBoxProps> = () => {
                     </Hidden>
                     <Box display="flex" flexDirection="column" flex={1}>
                         <MessagesWrapper>
-                            {messages.map((message) => (<Message key={message.id} message={message} />))}
+                            {messages.map((message) => (<Message key={message.payload.id} message={message} />))}
                         </MessagesWrapper>
                         <Actions onMessage={(message) => handleSendMessage(message)} />
                     </Box>
