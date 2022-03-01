@@ -3,6 +3,8 @@
 cy['faker'] = require('@faker-js/faker');
 cy['io'] = require('socket.io-client');
 
+const serverAddress = 'http://localhost:8080';
+
 Cypress.on('uncaught:exception', (err, runnable) => {
     // returning false here prevents Cypress from
     // failing the test
@@ -11,7 +13,7 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 
 describe('shoutbox works as it should', () => {
     const mainUserName = (cy as any).faker.faker.name.findName();
-    const socket = (cy as any).io.io('http://localhost:8080');
+    const socket = (cy as any).io.io(serverAddress);
 
     beforeEach(() => {
         cy.visit('http://localhost:3000/');
@@ -46,7 +48,7 @@ describe('shoutbox works as it should', () => {
     it('sees the 2nd user join', () => {
         const secondUserName = (cy as any).faker.faker.name.findName();
 
-        cy.request('POST', 'http://localhost:8080/users/join', { name: secondUserName, socketId: socket.id }).then(res => {
+        cy.request('POST', serverAddress + '/users/join', { name: secondUserName, socketId: socket.id }).then(res => {
             socket.emit('JOIN', { name: secondUserName });
             cy.wait(1000)
             cy.get('#users-list-wrapper').contains(secondUserName);
@@ -57,7 +59,7 @@ describe('shoutbox works as it should', () => {
     it("can see 2nd user's messages without refresh", () => {
         const secondUserName = (cy as any).faker.faker.name.findName();
 
-        cy.request('POST', 'http://localhost:8080/users/join', { name: secondUserName, socketId: socket.id }).then(res => {
+        cy.request('POST', serverAddress + '/users/join', { name: secondUserName, socketId: socket.id }).then(res => {
             socket.emit('JOIN', { name: secondUserName });
             cy.wait(1000);
             const messageText = (cy as any).faker.faker.lorem.paragraph();
@@ -69,7 +71,7 @@ describe('shoutbox works as it should', () => {
     it("users can send clickable links", () => {
         const secondUserName = (cy as any).faker.faker.name.findName();
 
-        cy.request('POST', 'http://localhost:8080/users/join', { name: secondUserName, socketId: socket.id }).then(res => {
+        cy.request('POST', serverAddress + '/users/join', { name: secondUserName, socketId: socket.id }).then(res => {
             socket.emit('JOIN', { name: secondUserName });
             cy.wait(1000);
             const firstRandomUrl = (cy as any).faker.faker.internet.url();
@@ -98,7 +100,7 @@ describe('shoutbox works as it should', () => {
         const messages = new Array(10).fill('');
         const secondUserName = (cy as any).faker.faker.name.findName();
 
-        cy.request('POST', 'http://localhost:8080/users/join', { name: secondUserName, socketId: socket.id }).then(res => {
+        cy.request('POST', serverAddress + '/users/join', { name: secondUserName, socketId: socket.id }).then(res => {
             socket.emit('JOIN', { name: secondUserName });
             cy.wait(1000);
 
