@@ -35,7 +35,7 @@ const Login: React.FC<LoginProps> = () => {
                     <MeetingRoomRoundedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Enter the Chat
+                    Welcome to shoutbox
                 </Typography>
                 <Formik
                     initialValues={{ userName: '' }}
