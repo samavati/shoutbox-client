@@ -7,6 +7,7 @@ import MeetingRoomRoundedIcon from '@mui/icons-material/MeetingRoomRounded';
 import Typography from '@mui/material/Typography';
 import { useUser } from '../../context/user.context';
 import { Form, Formik } from 'formik';
+import * as Yup from 'yup';
 import FormikTextField from './components/FormikTextField';
 import { useSocket } from '../../context/socket.context';
 import { joinUser } from '../../services/users.service';
@@ -38,6 +39,9 @@ const Login: React.FC<LoginProps> = () => {
                 </Typography>
                 <Formik
                     initialValues={{ userName: '' }}
+                    validationSchema={Yup.object({
+                        userName:Yup.string().required('The name is required.')
+                    })}
                     onSubmit={async (values, { setFieldError, setSubmitting }) => {
                         try {
                             const { data } = await joinUser(values.userName, socket.id);
