@@ -1,46 +1,59 @@
-# Getting Started with Create React App
+# Shoutbox
+![shoutbox](https://raw.githubusercontent.com/samavati/shoutbox-client/main/doc/app-screen-shot.png)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+You can see [live demo here](http://185.202.113.68/)
+## Install
+  
 
-## Available Scripts
+$ git clone https://github.com/samavati/shoutbox-client.git
 
-In the project directory, you can run:
+$ cd PROJECT
 
-### `npm start`
+$ npm install
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+  
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Configure app
 
-### `npm test`
+  
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+If you want to change server address you need to modify .env file. REACT_APP_SERVER_URL="your server address here".
 
-### `npm run build`
+  
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Start & watch
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+  
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+$ npm start
 
-### `npm run eject`
+  
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Simple build for production
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+  
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+$ npm run build
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Test
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+$ npm run cypress-e2e
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+![Test screen shot](https://raw.githubusercontent.com/samavati/shoutbox-client/main/doc/test-screen-shot.png)
+
+  
+
+---
+
+  
+
+## Languages & tools
+
+- [TypeScript](https://www.typescriptlang.org/) added in CRA stage.
+- [React](http://facebook.github.io/react) is used for DOM manipulation.
+- [Material UI](https://mui.com/) is used for UI.
+- [socket.io-client](https://socket.io/docs/v4/client-api/) to create and manage socket connection.
+- [Formik](https://formik.org/) form handleing.
+- [Yup](https://github.com/jquense/yup) form vadilation.
+- [Cypress](https://www.cypress.io/) end to end test.
