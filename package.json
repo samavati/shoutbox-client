@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@cypress/react": "^5.12.3",
+    "@cypress/webpack-dev-server": "^1.8.1",
     "@emotion/react": "^11.8.1",
     "@emotion/styled": "^11.8.1",
     "@mui/icons-material": "^5.4.2",
@@ -16,6 +18,7 @@
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
     "axios": "^0.26.0",
+    "cypress": "^9.5.0",
     "date-fns": "^2.28.0",
     "formik": "^2.2.9",
     "lodash": "^4.17.21",
@@ -28,7 +31,6 @@
     "react-window": "^1.8.6",
     "sanitize-html": "^2.7.0",
     "sass": "^1.49.8",
-    "socket.io-client": "^4.4.1",
     "typescript": "^4.5.5",
     "uniqolor": "^1.0.1",
     "web-vitals": "^2.1.4",
@@ -38,7 +40,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cypress": "cypress open-ct",
+    "cypress-e2e": "cypress open"
   },
   "eslintConfig": {
     "extends": [

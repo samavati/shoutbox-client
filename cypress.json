@@ -1,0 +1,9 @@
+{
+    "viewportHeight": 1080,
+    "viewportWidth": 1920,
+    "requestTimeout": 100000,
+    "component": {
+        "testFiles": "**/*.test.{js,ts,jsx,tsx}",
+        "componentFolder": "src"
+    }
+}
