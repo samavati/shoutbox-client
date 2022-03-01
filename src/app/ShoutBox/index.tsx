@@ -4,9 +4,9 @@ import Box from '@mui/material/Box';
 import { FixedSizeList } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { ShoutBoxPaper } from './components/ShoutBoxPaper';
-import { AttendeesWrapper } from './components/AttendeesWrapper';
-import Attendee from './components/Attendee';
-import { IMessage, IUserMessage } from '../../model/Message';
+import { UsersListWrapper } from './components/UsersListWrapper';
+import User from './components/User';
+import { IAdminMessage, IMessage, IUserMessage } from '../../model/Message';
 import Message from './components/Message';
 import Actions from './components/Actions';
 import { useSocket } from '../../context/socket.context';
@@ -19,16 +19,6 @@ import { getConfig } from '../../services/config.service';
 import Hidden from '@mui/material/Hidden';
 import { replaceHyperlinks } from '../../utils/replaceHyperlinks';
 import { xor } from 'lodash';
-
-export interface AdminMessage {
-    type: string,
-    payload: {
-        id: string,
-        message: string,
-        data: any
-    }
-}
-
 interface ShoutBoxProps {
 
 }
@@ -57,7 +47,7 @@ const ShoutBox: React.FC<ShoutBoxProps> = () => {
     /**
      * A callback function, listens to the Admin Messages
      */
-    const handleAdminMessageEvents = useCallback(({ type, payload }: AdminMessage) => {
+    const handleAdminMessageEvents = useCallback(({ type, payload }: IAdminMessage) => {
 
         if (type === AdminMessageEvent.JOINED_SUCCESSFULLY) {
 
@@ -132,7 +122,7 @@ const ShoutBox: React.FC<ShoutBoxProps> = () => {
             <Box className='shout-box-wrapper'>
                 <ShoutBoxPaper>
                     <Hidden mdDown>
-                        <AttendeesWrapper>
+                        <UsersListWrapper id="users-list-wrapper">
                             <AutoSizer>
                                 {({ height, width }) => (
                                     <FixedSizeList
@@ -143,14 +133,14 @@ const ShoutBox: React.FC<ShoutBoxProps> = () => {
                                         itemSize={46}
                                         width={width}
                                     >
-                                        {Attendee}
+                                        {User}
                                     </FixedSizeList>
                                 )}
                             </AutoSizer>
-                        </AttendeesWrapper>
+                        </UsersListWrapper>
                     </Hidden>
                     <Box display="flex" flexDirection="column" flex={1}>
-                        <MessagesWrapper>
+                        <MessagesWrapper id="message-list-wrapper">
                             {messages.map((message) => (<Message key={message.payload.id} message={message} />))}
                         </MessagesWrapper>
                         <Actions onMessage={(message) => handleSendMessage(message)} />

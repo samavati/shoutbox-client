@@ -1,21 +1,25 @@
 import React from 'react';
 import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import uniqolor from 'uniqolor';
 import sanitizeHtml from 'sanitize-html';
 import { format } from 'date-fns';
 import { IUserMessage } from '../../../../../model/Message';
-import Typography from '@mui/material/Typography';
 
 interface UserMessageProps {
     userMessage: IUserMessage
 }
 
+/**
+ * Shows Users(except current user) Message in the messages list wrapper 
+ */
 const UserMessage: React.FC<UserMessageProps> = ({ userMessage }) => {
     const { user, message, date } = userMessage;
 
     return (
-        <div style={{ display: 'flex', marginBottom: '2px' }}>
-            <div>
+        <Box component="div" aria-label="message" display="flex" mb="2px">
+            <Box>
                 <Paper sx={{
                     maxWidth: '300px',
                     padding: '10px',
@@ -33,8 +37,8 @@ const UserMessage: React.FC<UserMessageProps> = ({ userMessage }) => {
                     />
                 </Paper>
                 <Typography variant="caption">{format(new Date(date), 'd MMM H:mm')}</Typography>
-            </div>
-        </div>
+            </Box>
+        </Box>
     );
 }
 

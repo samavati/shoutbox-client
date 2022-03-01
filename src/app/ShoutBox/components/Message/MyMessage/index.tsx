@@ -1,7 +1,9 @@
 import React from 'react';
 import Paper from '@mui/material/Paper';
 import sanitizeHtml from 'sanitize-html';
-import { Typography, useTheme } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import useTheme from '@mui/material/styles/useTheme';
 import { format } from 'date-fns';
 import { IUserMessage } from '../../../../../model/Message';
 
@@ -14,8 +16,14 @@ const MyMessage: React.FC<MyMessageProps> = ({ myMessage }) => {
     const theme = useTheme();
 
     return (
-        <div style={{ display: 'flex', marginBottom: '2px', justifyContent: 'end' }}>
-            <div>
+        <Box
+            component="div"
+            aria-label="message"
+            display="flex"
+            mb="2px"
+            justifyContent="end"
+        >
+            <Box>
                 <Paper sx={{
                     maxWidth: '300px',
                     padding: '10px',
@@ -35,8 +43,8 @@ const MyMessage: React.FC<MyMessageProps> = ({ myMessage }) => {
                     />
                 </Paper>
                 <Typography variant="caption">{format(new Date(date), 'd MMM H:mm')}</Typography>
-            </div>
-        </div>
+            </Box>
+        </Box>
     );
 }
 

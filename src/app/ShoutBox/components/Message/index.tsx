@@ -8,6 +8,16 @@ interface MessageProps {
     message: IMessage
 }
 
+/**
+ * This component decides how to show message in the messages wrapper.
+ * there are 3 kind of messages:
+ * 
+ *  **User Message**: messages from online users **expect messages from the user that is client now**
+ * 
+ *  **MY Message**: messages that current user sends
+ * 
+ *  **Admin Message**: messages from admin when new user joined or left the room
+ */
 const Message: React.FC<MessageProps> = ({ message }) => {
 
     if (message.type === 'user') {

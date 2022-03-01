@@ -20,7 +20,6 @@ const Login: React.FC<LoginProps> = () => {
     const { setUser } = useUser();
     const socket = useSocket();
 
-
     return (
         <Container component="main" maxWidth="xs">
             <Box
@@ -58,11 +57,13 @@ const Login: React.FC<LoginProps> = () => {
                                     fullWidth
                                     label="Your name"
                                     name="userName"
+                                    id="user-name"
                                     autoFocus
                                 />
                                 <LoadingButton
                                     type="submit"
                                     fullWidth
+                                    id="enter-button"
                                     loading={isSubmitting}
                                     variant="contained"
                                     sx={{ mt: 3, mb: 2 }}

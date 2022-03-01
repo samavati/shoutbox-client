@@ -7,6 +7,9 @@ type FormikTextFieldProps = TextFieldProps & {
     name: string
 }
 
+/**
+ * Custom TextField component integrated with formik, name property is mandatory
+ */
 const FormikTextField: React.FC<FormikTextFieldProps> = ({ name, ...props }) => {
 
     const [field, meta] = useField(name);

@@ -5,11 +5,14 @@ import ListItemText from '@mui/material/ListItemText';
 import { ListChildComponentProps } from 'react-window';
 import { IUser } from '../../../../model/User';
 
-interface AttendeeProps extends ListChildComponentProps<IUser[]> {
+interface UserProps extends ListChildComponentProps<IUser[]> {
 
 }
 
-const Attendee: React.FC<AttendeeProps> = ({ style, data, index }) => {
+/**
+ * Shows each users in the list of online users
+ */
+const User: React.FC<UserProps> = ({ style, data, index }) => {
 
     const item = data[index];
 
@@ -22,4 +25,4 @@ const Attendee: React.FC<AttendeeProps> = ({ style, data, index }) => {
     );
 }
 
-export default Attendee;
+export default User;

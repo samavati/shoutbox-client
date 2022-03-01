@@ -13,6 +13,7 @@ const Actions: React.FC<ActionsProps> = ({ onMessage }) => {
     const [message, setMessage] = useState<string>('');
 
     const handleSendMessage = () => {
+        // Check if input is empty
         if (message.trim()) {
             onMessage(message);
             setMessage('');
@@ -27,11 +28,14 @@ const Actions: React.FC<ActionsProps> = ({ onMessage }) => {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                id="message-text-field"
                 fullWidth
             />
             <IconButton
                 color="primary"
-                onClick={() => handleSendMessage()}>
+                onClick={() => handleSendMessage()}
+                id="submit-message-button"
+                >
                 <SendRoundedIcon />
             </IconButton>
         </Box>

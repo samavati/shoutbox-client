@@ -10,3 +10,12 @@ export interface IUserMessage {
     date: string;
     message: string;
 }
+
+export interface IAdminMessage {
+    type: string,
+    payload: {
+        id: string,
+        message: string,
+        data: any
+    }
+}

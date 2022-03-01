@@ -1,5 +1,5 @@
 import React from 'react';
-import Box from '@mui/material/Box';
+import Box, { BoxProps } from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import ScrollToBottom from 'react-scroll-to-bottom';
 
@@ -13,14 +13,14 @@ export const StyledMessagesWrapper = styled(Box)(({ theme }) => ({
     }
 }));
 
-interface MessagesWrapperProps {
+interface MessagesWrapperProps extends BoxProps {
 
 }
 
-const MessagesWrapper: React.FC<MessagesWrapperProps> = ({ children }) => {
+const MessagesWrapper: React.FC<MessagesWrapperProps> = ({ children, ...props }) => {
 
     return (
-        <StyledMessagesWrapper>
+        <StyledMessagesWrapper {...props}>
             <ScrollToBottom>
                 {children}
             </ScrollToBottom>
