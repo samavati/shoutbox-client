@@ -3,7 +3,7 @@
 cy['faker'] = require('@faker-js/faker');
 cy['io'] = require('socket.io-client');
 
-const serverAddress = 'http://localhost:8080';
+const serverAddress = 'http://185.202.113.68';
 
 Cypress.on('uncaught:exception', (err, runnable) => {
     // returning false here prevents Cypress from
@@ -16,7 +16,7 @@ describe('shoutbox works as it should', () => {
     const socket = (cy as any).io.io(serverAddress);
 
     beforeEach(() => {
-        cy.visit('http://localhost:3000/');
+        cy.visit('http://185.202.113.68');
         cy.intercept({
             method: 'POST',
             url: '/users/join',
