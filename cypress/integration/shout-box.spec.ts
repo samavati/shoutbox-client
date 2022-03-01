@@ -97,24 +97,21 @@ describe('shoutbox works as it should', () => {
 
 
     it("only limit number of messages shows", () => {
-        const messages = new Array(10).fill('');
         const secondUserName = (cy as any).faker.faker.name.findName();
 
         cy.request('POST', serverAddress + '/users/join', { name: secondUserName, socketId: socket.id }).then(res => {
             socket.emit('JOIN', { name: secondUserName });
             cy.wait(1000);
 
-            for (let index = 0; index < messages.length; index++) {
-                if (index % 2 === 0) {
-                    socket.emit('USER_MESSAGE', { message: (cy as any).faker.faker.lorem.sentence() })
-                } else {
-                    cy.get('#message-text-field').type((cy as any).faker.faker.lorem.sentence());
-                    cy.get('#submit-message-button').click();
-                    cy.get('#message-list-wrapper')
-                }
-            }
+            cy.request('GET', serverAddress + '/config').then(res => {
+                const messages = new Array(3 * res.body.show_limit).fill('');
 
-            cy.get("[aria-label='message']").should('have.length', 5)
+                for (let index = 0; index < messages.length; index++) {
+                    socket.emit('USER_MESSAGE', { message: (cy as any).faker.faker.lorem.sentence() })
+                }
+    
+                cy.get("[aria-label='message']").should('have.length', res.body.show_limit)
+            })
 
         });
     });
