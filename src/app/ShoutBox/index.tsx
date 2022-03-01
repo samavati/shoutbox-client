@@ -119,7 +119,7 @@ const ShoutBox: React.FC<ShoutBoxProps> = () => {
 
     return (
         <Container component="main" maxWidth="md">
-            <Box className='shout-box-wrapper'>
+            <Box height="100vh" py={1} className='shout-box-wrapper'>
                 <ShoutBoxPaper>
                     <Hidden mdDown>
                         <UsersListWrapper id="users-list-wrapper">
